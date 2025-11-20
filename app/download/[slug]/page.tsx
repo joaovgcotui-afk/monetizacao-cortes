@@ -1,11 +1,32 @@
+// app/download/[slug]/page.tsx
+import { videos } from "../../../data/videos";
 import DownloadClient from "./DownloadClient";
 
 interface PageProps {
-  params: Promise<{ slug: string }>;
+  params: { slug: string };
 }
 
-export default async function Page({ params }: PageProps) {
-  const { slug } = await params;
+export default function DownloadPage({ params }: PageProps) {
+  const { slug } = params;
 
-  return <DownloadClient slug={slug} />;
+  const video = videos.find((v) => v.slug === slug);
+
+  if (!video) {
+    return (
+      <main className="min-h-screen flex items-center justify-center bg-gray-50">
+        <p className="text-gray-600">Vídeo não encontrado.</p>
+      </main>
+    );
+  }
+
+  return (
+    <main className="min-h-screen bg-gray-50 flex items-center justify-center px-6">
+      <div className="max-w-xl w-full">
+        <DownloadClient
+          title={video.title}
+          downloadUrl={video.downloadUrl ?? "#"}
+        />
+      </div>
+    </main>
+  );
 }

@@ -1,5 +1,6 @@
 import "./globals.css";
 import type { Metadata } from "next";
+import AdsClient from "./components/AdsClient"; // <-- IMPORTANTE
 
 export const metadata: Metadata = {
   title: "Monetização Cortes Studio",
@@ -13,16 +14,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="pt-BR">
-      <head>
-        {/* POPUNDER — Adsterra */}
-        {/* eslint-disable-next-line @next/next/no-sync-scripts */}
-        <script
-          type="text/javascript"
-          src="//pl28098761.effectivegatecpm.com/64/73/b6/6473b62e25e81b3ba1470d9dd3c53185.js"
-        ></script>
-      </head>
-
       <body className="bg-gray-50 text-gray-900 flex flex-col min-h-screen">
+        {/* 🔥 Anúncios globais (funciona em TODAS as páginas) */}
+        <AdsClient />
+
         <div className="flex-grow">{children}</div>
 
         {/* FOOTER */}
@@ -42,13 +37,6 @@ export default function RootLayout({
             </div>
           </div>
         </footer>
-
-        {/* SOCIAL BAR — Adsterra */}
-        {/* eslint-disable-next-line @next/next/no-sync-scripts */}
-        <script
-          type="text/javascript"
-          src="//pl28098744.effectivegatecpm.com/c6/83/87/c68387c69919500d593aefd1718898c5.js"
-        ></script>
       </body>
     </html>
   );
