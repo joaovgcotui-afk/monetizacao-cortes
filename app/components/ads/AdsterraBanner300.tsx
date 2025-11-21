@@ -2,24 +2,13 @@
 
 import { useEffect } from "react";
 
-/**
- * Banner 300x250 do Adsterra.
- * Usa atOptions + invoke.js.
- */
 export function AdsterraBanner300() {
   useEffect(() => {
     if (typeof window === "undefined") return;
 
-    const container = document.getElementById("adsterra-banner-300x250");
-    if (!container) return;
-
-    // evita duplicar scripts
-    if (container.getAttribute("data-adsterra-initialized") === "true") return;
-    container.setAttribute("data-adsterra-initialized", "true");
-
-    const scriptConfig = document.createElement("script");
-    scriptConfig.type = "text/javascript";
-    scriptConfig.innerHTML = `
+    // garante que o script global exista
+    const configScript = document.createElement("script");
+    configScript.innerHTML = `
       atOptions = {
         'key' : 'ba483f356ee397e3d51e1beac74584c6',
         'format' : 'iframe',
@@ -28,21 +17,19 @@ export function AdsterraBanner300() {
         'params' : {}
       };
     `;
+    document.body.appendChild(configScript);
 
-    const scriptInvoke = document.createElement("script");
-    scriptInvoke.type = "text/javascript";
-    scriptInvoke.src =
+    const invokeScript = document.createElement("script");
+    invokeScript.src =
       "//www.highperformanceformat.com/ba483f356ee397e3d51e1beac74584c6/invoke.js";
-    scriptInvoke.async = true;
-
-    container.appendChild(scriptConfig);
-    container.appendChild(scriptInvoke);
+    invokeScript.async = true;
+    document.body.appendChild(invokeScript);
   }, []);
 
   return (
     <div
       id="adsterra-banner-300x250"
-      className="my-6 mx-auto flex justify-center"
+      className="my-6 mx-auto"
       style={{ width: 300, height: 250 }}
     />
   );
