@@ -2,7 +2,7 @@ import Image from "next/image";
 import { categories } from "../../../data/categories";
 import { videos } from "../../../data/videos";
 import { thumbnails } from "../../../data/thumbnails";
-import AdsClient from "../../components/AdsClient";
+import { AdsClient } from "../../components/AdsClient";
 
 interface PageProps {
   params: { slug: string };
