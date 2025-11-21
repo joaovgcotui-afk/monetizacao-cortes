@@ -12,7 +12,7 @@ interface DownloadClientProps {
   thumbnail: string;
 }
 
-// ✔ ID real do AdCash
+// ID real do AdCash
 const ADCASH_ZONE_ID = "10633666";
 
 export default function DownloadClient({
@@ -56,8 +56,8 @@ export default function DownloadClient({
         </div>
       </section>
 
-      {/* Bloco de anúncios laterais */}
-      <section className="grid gap-4 sm:grid-cols-2">
+      {/* BLOCO DE ANÚNCIOS */}
+      <section className="grid gap-6 md:grid-cols-2">
         {/* Native Adsterra */}
         <div className="border border-gray-100 rounded-xl p-4">
           <h2 className="text-xs font-semibold text-gray-500 mb-2">
@@ -69,20 +69,28 @@ export default function DownloadClient({
           </div>
         </div>
 
-        {/* AdCash + Banner 300 */}
+        {/* AdCash + Banner 300 Adsterra */}
         <div className="border border-gray-100 rounded-xl p-4 space-y-4">
           <h2 className="text-xs font-semibold text-gray-500">
             Mais oportunidades de ganho 💰
           </h2>
 
-          <div className="flex justify-center">
+          {/* Zona AdCash COM ALTURA GARANTIDA */}
+          <div
+            className="w-full flex justify-center items-center border border-gray-200 rounded-lg bg-gray-50"
+            style={{ minHeight: 260 }}
+          >
             <AdCashZone
               zoneId={ADCASH_ZONE_ID}
               containerId="adcash-download-zone"
             />
           </div>
 
-          <div className="flex justify-center">
+          {/* Banner 300x250 Adsterra COM ALTURA GARANTIDA */}
+          <div
+            className="w-full flex justify-center items-center border border-gray-200 rounded-lg bg-gray-50"
+            style={{ minHeight: 260 }}
+          >
             <AdsterraBanner300 />
           </div>
         </div>

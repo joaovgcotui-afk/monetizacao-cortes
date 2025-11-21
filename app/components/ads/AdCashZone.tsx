@@ -36,5 +36,11 @@ export function AdCashZone({ zoneId, containerId }: AdCashZoneProps) {
     return () => clearTimeout(timeout);
   }, [zoneId]);
 
-  return <div id={containerId} className="w-full flex justify-center"></div>;
+  return (
+    <div
+      id={containerId}
+      className="w-full flex justify-center items-center border border-gray-200 rounded-md"
+      style={{ minHeight: 260 }}
+    />
+  );
 }

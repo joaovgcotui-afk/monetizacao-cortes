@@ -28,9 +28,9 @@ export function AdsterraBanner300() {
 
   return (
     <div
-      id="adsterra-banner-300x250"
-      className="my-6 mx-auto"
-      style={{ width: 300, height: 250 }}
+      id="adsterra-300"
+      className="w-full flex justify-center items-center border border-gray-200 rounded-md"
+      style={{ minHeight: 260 }}
     />
   );
 }
