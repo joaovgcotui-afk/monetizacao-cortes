@@ -1,10 +1,13 @@
 "use client";
 
+import { useEffect } from "react";
 import { useAdblockDetector } from "@/app/hooks/useAdblockDetector";
+
 import { VideoPlayerWithAds } from "../../components/VideoPlayerWithAds";
 import { AdsterraNativeBanner } from "../../components/ads/AdsterraNativeBanner";
 import { AdsterraBanner300 } from "../../components/ads/AdsterraBanner300";
 import { AdCashZone } from "../../components/ads/AdCashZone";
+// Smartlink será escondido se AdBlock detectado
 import { MonetagSmartLink } from "../../components/ads/MonetagSmartLink";
 
 interface DownloadClientProps {
@@ -20,7 +23,18 @@ export default function DownloadClient({
   downloadUrl,
   thumbnail,
 }: DownloadClientProps) {
-  const { isChecking, isAdblock } = useAdblockDetector();
+  const { isAdblock, isChecking } = useAdblockDetector();
+
+  // 🔁 REDIRECIONAMENTO AUTOMÁTICO
+  useEffect(() => {
+    if (!isChecking && isAdblock) {
+      const timer = setTimeout(() => {
+        window.location.href = "/desbloquear";
+      }, 3000); // 3 segundos
+
+      return () => clearTimeout(timer);
+    }
+  }, [isAdblock, isChecking]);
 
   return (
     <div className="bg-white shadow-lg rounded-2xl p-4 sm:p-6 space-y-8">
@@ -33,13 +47,12 @@ export default function DownloadClient({
         </p>
       </header>
 
-      {/* AVISO DE ADBLOCK ATIVO */}
+      {/* Aviso de AdBlock detectado */}
       {!isChecking && isAdblock && (
-        <div className="bg-yellow-100 border border-yellow-300 text-yellow-800 text-sm p-3 rounded-lg">
-          <strong>Detectamos um bloqueador de anúncios 👀</strong>
+        <div className="bg-yellow-100 border border-yellow-300 text-yellow-900 text-sm p-3 rounded-lg">
+          <strong>AdBlock detectado 👀</strong>
           <br />
-          Para liberar o download, desative o AdBlock para{" "}
-          <span className="font-semibold">monetizacaocortes.online</span>.
+          Você será redirecionado para liberar o acesso...
         </div>
       )}
 
@@ -48,18 +61,16 @@ export default function DownloadClient({
         <VideoPlayerWithAds src={downloadUrl} poster={thumbnail} />
 
         <p className="text-xs text-gray-400">
-          Esse pequeno anúncio antes do vídeo ajuda a manter o projeto vivo. 🙌
+          Esse pequeno anúncio antes do vídeo mantém o projeto vivo. 🙌
         </p>
       </section>
 
-      {/* Botão de download (bloqueado se AdBlock ativo) */}
+      {/* Botão de download — bloqueado se AdBlock */}
       <section className="space-y-4">
         <button
           disabled={isAdblock}
           onClick={() => {
-            if (!isAdblock) {
-              window.location.href = downloadUrl;
-            }
+            if (!isAdblock) window.location.href = downloadUrl;
           }}
           className={`w-full inline-flex items-center justify-center gap-2 px-4 py-3 rounded-lg font-semibold text-sm transition
             ${
@@ -71,15 +82,16 @@ export default function DownloadClient({
           ⬇️ Baixar arquivo de vídeo
         </button>
 
-        {/* SmartLink */}
-        <div className="text-center">
-          <MonetagSmartLink />
-        </div>
+        {/* SmartLink só aparece se NÃO tiver AdBlock */}
+        {!isAdblock && (
+          <div className="text-center">
+            <MonetagSmartLink />
+          </div>
+        )}
       </section>
 
       {/* Banners */}
       <section className="grid gap-6 md:grid-cols-2">
-        {/* Native Adsterra */}
         <div className="border border-gray-100 rounded-xl p-4">
           <h2 className="text-xs font-semibold text-gray-500 mb-2">
             Conteúdo recomendado (Adsterra)
@@ -89,7 +101,6 @@ export default function DownloadClient({
           </div>
         </div>
 
-        {/* AdCash + Banner 300 */}
         <div className="border border-gray-100 rounded-xl p-4 space-y-4">
           <h2 className="text-xs font-semibold text-gray-500">
             Mais oportunidades de ganho 💰
