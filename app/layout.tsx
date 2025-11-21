@@ -14,10 +14,6 @@ export default function RootLayout({
 }) {
   return (
     <html lang="pt-BR">
-      <head>
-        {/* Verificação do MONETAG */}
-        <meta name="monetag" content="e4fb8463355290be58c5f75c62fe35c8" />
-      </head>
       <body>
         <AdsClient />
         {children}
