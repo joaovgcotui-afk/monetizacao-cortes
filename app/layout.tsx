@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { AdsClient } from "./components/AdsClient";
 
 export const metadata: Metadata = {
   title: "Monetização Cortes Studio",
@@ -14,10 +13,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="pt-BR">
-      <body>
-        <AdsClient />
-        {children}
-      </body>
+      <body>{children}</body>
     </html>
   );
 }
