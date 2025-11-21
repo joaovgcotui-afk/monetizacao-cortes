@@ -1,76 +1,63 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { HilltopPreRoll } from "./ads/HilltopPreRoll";
+import { useEffect, useState } from "react";
 
-type VideoPlayerWithAdsProps = {
+interface VideoPlayerWithAdsProps {
   src: string;
-  poster?: string;
-  hilltopSpotId: string;
-};
+  poster: string;
+}
 
-export function VideoPlayerWithAds({
-  src,
-  poster,
-  hilltopSpotId,
-}: VideoPlayerWithAdsProps) {
-  const videoRef = useRef<HTMLVideoElement | null>(null);
+export function VideoPlayerWithAds({ src, poster }: VideoPlayerWithAdsProps) {
   const [showMainVideo, setShowMainVideo] = useState(false);
-  const [secondsLeft, setSecondsLeft] = useState(5);
+  const [countdown, setCountdown] = useState(5);
 
+  // Controle do contador
   useEffect(() => {
-    const interval = window.setInterval(() => {
-      setSecondsLeft((prev) => {
-        if (prev <= 1) {
-          window.clearInterval(interval);
-          setShowMainVideo(true);
-          return 0;
-        }
-        return prev - 1;
-      });
+    if (showMainVideo) return;
+
+    if (countdown <= 0) {
+      // dispara troca de vídeo em um microtask para evitar warning
+      Promise.resolve().then(() => setShowMainVideo(true));
+      return;
+    }
+
+    const interval = setInterval(() => {
+      setCountdown((prev) => prev - 1);
     }, 1000);
 
-    return () => window.clearInterval(interval);
-  }, []);
+    return () => clearInterval(interval);
+  }, [countdown, showMainVideo]);
 
-  useEffect(() => {
-    if (showMainVideo && videoRef.current) {
-      videoRef.current.play().catch(() => {
-        // autoplay falhou, o usuário terá que clicar
-      });
-    }
-  }, [showMainVideo]);
+  // Quando terminar o anúncio -> mostrar vídeo principal
+  if (showMainVideo) {
+    return (
+      <video
+        src={src}
+        poster={poster}
+        className="w-full rounded-lg"
+        controls
+        autoPlay
+      />
+    );
+  }
 
+  // Tela de “pré-roll”
   return (
-    <div className="w-full max-w-3xl mx-auto">
-      {!showMainVideo && (
-        <div className="relative w-full aspect-video bg-black rounded-xl overflow-hidden">
-          {/* Overlay "Anúncio" + contador */}
-          <div className="absolute top-3 right-3 bg-black/60 text-white text-xs px-3 py-1 rounded-full">
-            Anúncio • {secondsLeft}s
-          </div>
+    <div className="w-full rounded-lg bg-black text-white flex flex-col items-center justify-center aspect-video space-y-3">
+      <p className="text-sm opacity-80">
+        Anúncio rápido antes do vídeo principal.
+      </p>
 
-          {/* Container do player de vídeo do Hilltop */}
-          <div
-            id="hilltop-preroll-container"
-            className="w-full h-full"
-            data-spot-id={hilltopSpotId}
-          />
+      <p className="text-lg font-semibold">
+        Seu vídeo começa em {countdown}s...
+      </p>
 
-          {/* Script do Hilltop (pre-roll) */}
-          <HilltopPreRoll spotId={hilltopSpotId} />
-        </div>
-      )}
-
-      {showMainVideo && (
-        <video
-          ref={videoRef}
-          src={src}
-          poster={poster}
-          controls
-          className="w-full rounded-xl"
-        />
-      )}
+      <button
+        onClick={() => setShowMainVideo(true)}
+        className="mt-2 px-4 py-2 text-sm rounded bg-white text-black hover:bg-gray-200 transition"
+      >
+        Pular anúncio e assistir agora
+      </button>
     </div>
   );
 }
