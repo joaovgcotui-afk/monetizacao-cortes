@@ -12,7 +12,6 @@ interface DownloadClientProps {
   thumbnail: string;
 }
 
-// ID real do AdCash
 const ADCASH_ZONE_ID = "10633666";
 
 export default function DownloadClient({
@@ -21,42 +20,48 @@ export default function DownloadClient({
   thumbnail,
 }: DownloadClientProps) {
   return (
-    <div className="bg-white shadow-lg rounded-2xl p-4 sm:p-6 space-y-8">
-      <header className="space-y-1">
-        <h1 className="text-2xl font-bold text-gray-900">{title}</h1>
-        <p className="text-sm text-gray-500">
-          Assista a um anúncio rápido e depois baixe o arquivo em alta
-          qualidade.
+    <div className="w-full max-w-4xl mx-auto bg-white shadow-xl rounded-2xl p-6 sm:p-10 mt-6 space-y-8 border border-gray-100">
+      {/* HEADER */}
+      <header className="space-y-2 text-center">
+        <h1 className="text-3xl font-extrabold text-gray-900">{title}</h1>
+
+        <p className="text-gray-600 text-sm">
+          Assista rapidamente e baixe o arquivo em alta qualidade.
         </p>
       </header>
 
+      {/* PLAYER */}
       <section className="space-y-3">
-        <VideoPlayerWithAds src={downloadUrl} poster={thumbnail} />
+        <div className="rounded-xl overflow-hidden border border-gray-200 shadow-sm">
+          <VideoPlayerWithAds src={downloadUrl} poster={thumbnail} />
+        </div>
 
-        <p className="text-xs text-gray-400">
-          Esse pequeno anúncio antes do vídeo ajuda a manter o projeto vivo e a
-          produção de novos cortes. 🙌
+        <p className="text-xs text-center text-gray-400">
+          Esses anúncios ajudam a manter o projeto ativo e gratuito 🙌
         </p>
       </section>
 
-      <section className="space-y-4">
+      {/* DOWNLOAD */}
+      <section className="space-y-4 text-center">
         <a
           href={downloadUrl}
-          className="w-full inline-flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-3 rounded-lg font-semibold text-sm transition-colors"
+          className="block bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg text-base font-semibold shadow transition"
           download
         >
           ⬇️ Baixar arquivo de vídeo
         </a>
 
-        <div className="text-center">
+        <div className="text-center opacity-80 text-sm">
           <MonetagSmartLink />
         </div>
       </section>
 
+      {/* GRID DE ANÚNCIOS */}
       <section className="grid gap-6 md:grid-cols-2">
-        <div className="border border-gray-100 rounded-xl p-4">
-          <h2 className="text-xs font-semibold text-gray-500 mb-2">
-            Conteúdo recomendado (Adsterra)
+        {/* ADSTERRA NATIVE */}
+        <div className="bg-gray-50 rounded-xl p-4 border border-gray-200 shadow-sm">
+          <h2 className="text-xs font-semibold text-gray-500 mb-3">
+            Conteúdo recomendado
           </h2>
 
           <div className="flex justify-center">
@@ -64,14 +69,16 @@ export default function DownloadClient({
           </div>
         </div>
 
-        <div className="border border-gray-100 rounded-xl p-4 space-y-4">
+        {/* ADCASH + BANNER 300 */}
+        <div className="bg-gray-50 rounded-xl p-4 border border-gray-200 space-y-4 shadow-sm">
           <h2 className="text-xs font-semibold text-gray-500">
-            Mais oportunidades de ganho 💰
+            Mais Oportunidades 💰
           </h2>
 
+          {/* ADCASH */}
           <div
-            className="w-full flex justify-center items-center border border-gray-200 rounded-lg bg-gray-50"
-            style={{ minHeight: 260 }}
+            className="rounded-lg bg-white border border-gray-200 p-2 flex justify-center items-center shadow-sm"
+            style={{ minHeight: 250 }}
           >
             <AdCashZone
               zoneId={ADCASH_ZONE_ID}
@@ -79,9 +86,10 @@ export default function DownloadClient({
             />
           </div>
 
+          {/* BANNER 300 */}
           <div
-            className="w-full flex justify-center items-center border border-gray-200 rounded-lg bg-gray-50"
-            style={{ minHeight: 260 }}
+            className="rounded-lg bg-white border border-gray-200 p-2 flex justify-center items-center shadow-sm"
+            style={{ minHeight: 250 }}
           >
             <AdsterraBanner300 />
           </div>
