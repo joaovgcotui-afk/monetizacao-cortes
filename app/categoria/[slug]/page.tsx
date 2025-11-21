@@ -2,7 +2,6 @@ import Image from "next/image";
 import { categories } from "../../../data/categories";
 import { videos } from "../../../data/videos";
 import { thumbnails } from "../../../data/thumbnails";
-import { AdsClient } from "../../components/AdsClient";
 
 interface PageProps {
   params: { slug: string };
@@ -27,9 +26,6 @@ export default async function CategoriaPage({ params }: PageProps) {
 
   return (
     <main className="min-h-screen bg-gray-50">
-      {/* ANÚNCIOS */}
-      <AdsClient />
-
       {/* HEADER */}
       <header className="bg-white shadow-sm sticky top-0 z-50">
         <div className="max-w-6xl mx-auto px-6 py-4">
@@ -42,9 +38,6 @@ export default async function CategoriaPage({ params }: PageProps) {
         <h2 className="text-2xl font-bold text-gray-800 mb-2">
           Vídeos desta categoria:
         </h2>
-
-        {/* Banner logo abaixo do título */}
-        <AdsClient />
 
         {videosDaCategoria.length === 0 && (
           <p className="text-gray-600 mt-4 bg-white p-4 rounded shadow">
@@ -62,7 +55,6 @@ export default async function CategoriaPage({ params }: PageProps) {
                 key={video.slug}
                 className="bg-white border border-gray-200 shadow-sm hover:shadow-md transition-shadow rounded-lg p-4"
               >
-                {/* card thumbnail */}
                 <div className="mb-4 w-full h-40 relative rounded overflow-hidden bg-gray-100">
                   {thumb ? (
                     <Image
@@ -88,11 +80,6 @@ export default async function CategoriaPage({ params }: PageProps) {
                 >
                   Download
                 </a>
-
-                {/* Banner no final do card */}
-                <div className="mt-4">
-                  <AdsClient />
-                </div>
               </div>
             );
           })}
