@@ -5,6 +5,7 @@ import { AdsterraNativeBanner } from "../../components/ads/AdsterraNativeBanner"
 import { AdsterraBanner300 } from "../../components/ads/AdsterraBanner300";
 import { AdCashZone } from "../../components/ads/AdCashZone";
 import { MonetagSmartLink } from "../../components/ads/MonetagSmartLink";
+import { AdblockGuard } from "../../components/AdblockGuard";
 
 interface DownloadClientProps {
   title: string;
@@ -31,6 +32,9 @@ export default function DownloadClient({
         </p>
       </header>
 
+      {/* Aviso Anti-AdBlock (modo banner) */}
+      <AdblockGuard mode="banner" />
+
       {/* Player com pré-roll simples */}
       <section className="space-y-3">
         <VideoPlayerWithAds src={downloadUrl} poster={thumbnail} />
@@ -51,6 +55,7 @@ export default function DownloadClient({
           ⬇️ Baixar arquivo de vídeo
         </a>
 
+        {/* SmartLink Monetag */}
         <div className="text-center">
           <MonetagSmartLink />
         </div>
@@ -69,13 +74,13 @@ export default function DownloadClient({
           </div>
         </div>
 
-        {/* AdCash + Banner 300 Adsterra */}
+        {/* AdCash + Banner 300x250 Adsterra */}
         <div className="border border-gray-100 rounded-xl p-4 space-y-4">
           <h2 className="text-xs font-semibold text-gray-500">
             Mais oportunidades de ganho 💰
           </h2>
 
-          {/* Zona AdCash COM ALTURA GARANTIDA */}
+          {/* AdCash Zone */}
           <div
             className="w-full flex justify-center items-center border border-gray-200 rounded-lg bg-gray-50"
             style={{ minHeight: 260 }}
@@ -86,7 +91,7 @@ export default function DownloadClient({
             />
           </div>
 
-          {/* Banner 300x250 Adsterra COM ALTURA GARANTIDA */}
+          {/* Banner Adsterra 300x250 */}
           <div
             className="w-full flex justify-center items-center border border-gray-200 rounded-lg bg-gray-50"
             style={{ minHeight: 260 }}
