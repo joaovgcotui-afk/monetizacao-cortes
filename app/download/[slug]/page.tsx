@@ -1,5 +1,5 @@
 // app/download/[slug]/page.tsx
-import { videos } from "../../../data/videos";
+import { videos } from "@/data/videos";
 import DownloadClient from "./DownloadClient";
 
 interface PageProps {
@@ -14,17 +14,18 @@ export default function DownloadPage({ params }: PageProps) {
   if (!video) {
     return (
       <main className="min-h-screen flex items-center justify-center bg-gray-50">
-        <p className="text-gray-600">Vídeo não encontrado.</p>
+        <p className="text-gray-600 text-lg">Vídeo não encontrado.</p>
       </main>
     );
   }
 
   return (
-    <main className="min-h-screen bg-gray-50 flex items-center justify-center px-6">
-      <div className="max-w-xl w-full">
+    <main className="min-h-screen bg-gray-50 flex items-center justify-center px-4 sm:px-6">
+      <div className="max-w-3xl w-full py-8">
         <DownloadClient
           title={video.title}
-          downloadUrl={video.downloadUrl ?? "#"}
+          downloadUrl={video.downloadUrl}
+          thumbnail={video.thumbnail}
         />
       </div>
     </main>

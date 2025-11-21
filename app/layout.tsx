@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { AdsClient } from "./components/AdsClient";
 
 export const metadata: Metadata = {
   title: "Monetização Cortes Studio",
@@ -13,7 +14,15 @@ export default function RootLayout({
 }) {
   return (
     <html lang="pt-BR">
-      <body>{children}</body>
+      <head>
+        {/* Monetag Site Verification */}
+        <meta name="monetag" content="743381a3c558995ad993355162fc7956" />
+      </head>
+
+      <body className="bg-gray-50">
+        <AdsClient />
+        {children}
+      </body>
     </html>
   );
 }
