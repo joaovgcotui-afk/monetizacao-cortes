@@ -12,8 +12,8 @@ interface DownloadClientProps {
   thumbnail: string;
 }
 
-// TODO: assim que tiver o ID real do AdCash, coloca aqui:
-const ADCASH_ZONE_ID = "SEU_ADCASH_ZONE_ID";
+// ✔ ID real do AdCash
+const ADCASH_ZONE_ID = "10633666";
 
 export default function DownloadClient({
   title,
@@ -31,7 +31,7 @@ export default function DownloadClient({
         </p>
       </header>
 
-      {/* Player com “pré-roll” simples */}
+      {/* Player com pré-roll simples */}
       <section className="space-y-3">
         <VideoPlayerWithAds src={downloadUrl} poster={thumbnail} />
 
@@ -51,7 +51,6 @@ export default function DownloadClient({
           ⬇️ Baixar arquivo de vídeo
         </a>
 
-        {/* SmartLink Monetag – extra monetização */}
         <div className="text-center">
           <MonetagSmartLink />
         </div>
@@ -64,12 +63,13 @@ export default function DownloadClient({
           <h2 className="text-xs font-semibold text-gray-500 mb-2">
             Conteúdo recomendado (Adsterra)
           </h2>
+
           <div className="flex justify-center">
             <AdsterraNativeBanner />
           </div>
         </div>
 
-        {/* AdCash + Banner 300 Adsterra */}
+        {/* AdCash + Banner 300 */}
         <div className="border border-gray-100 rounded-xl p-4 space-y-4">
           <h2 className="text-xs font-semibold text-gray-500">
             Mais oportunidades de ganho 💰

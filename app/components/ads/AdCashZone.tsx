@@ -1,48 +1,40 @@
 "use client";
 
-import { useThirdPartyScript } from "./useThirdPartyScript";
 import { useEffect } from "react";
-
-type AdCashZoneProps = {
-  /** ID da zone (copiado do painel AdCash). */
-  zoneId: string;
-  /** Opcional: id do container pra você identificar no DOM. */
-  containerId?: string;
-};
 
 declare global {
   interface Window {
-    acAsyc?: Array<{
-      type: string;
-      id: string;
-      elementId: string;
-    }>;
+    aclib?: {
+      runBanner: (params: { zoneId: string }) => void;
+    };
   }
 }
 
-/**
- * Componente genérico da zone AdCash.
- * Use esse cara onde quiser renderizar o bloco (abaixo do player, por ex).
- */
-export function AdCashZone({
-  zoneId,
-  containerId = "adcash-zone-1",
-}: AdCashZoneProps) {
-  useThirdPartyScript({
-    id: "adcash-main-script",
-    src: "https://static.adcash.com/script/adcash.js", // normalmente é algo assim, ajuste com o snippet oficial
-  });
+interface AdCashZoneProps {
+  zoneId: string;
+  containerId: string;
+}
 
+export function AdCashZone({ zoneId, containerId }: AdCashZoneProps) {
   useEffect(() => {
-    if (typeof window === "undefined") return;
+    // Carregar a biblioteca uma única vez
+    if (!document.getElementById("aclib")) {
+      const script = document.createElement("script");
+      script.id = "aclib";
+      script.src = "//acscdn.com/script/aclib.js";
+      script.async = true;
+      document.head.appendChild(script);
+    }
 
-    window.acAsyc = window.acAsyc || [];
-    window.acAsyc.push({
-      type: "zone",
-      id: zoneId,
-      elementId: containerId,
-    });
-  }, [zoneId, containerId]);
+    // Espera a lib carregar e executa o banner
+    const timeout = setTimeout(() => {
+      if (window.aclib) {
+        window.aclib.runBanner({ zoneId });
+      }
+    }, 600);
 
-  return <div id={containerId} />;
+    return () => clearTimeout(timeout);
+  }, [zoneId]);
+
+  return <div id={containerId} className="w-full flex justify-center"></div>;
 }
