@@ -1,5 +1,7 @@
 "use client";
 
+import { AdsterraNativeBanner } from "../../components/ads/AdsterraNativeBanner";
+
 interface DownloadClientProps {
   title: string;
   downloadUrl: string;
@@ -22,16 +24,9 @@ export default function DownloadClient({
         Baixar agora
       </a>
 
-      {/* ANÚNCIO */}
+      {/* ANÚNCIO ADSTERRA - GRID */}
       <div className="mt-6 flex justify-center">
-        {/* eslint-disable-next-line @next/next/no-sync-scripts */}
-        <script
-          async
-          data-cfasync="false"
-          src="//pl28098779.effectivegatecpm.com/1c959dd5f342a21ba393399bea75687ad/invoke.js"
-        ></script>
-
-        <div id="container-1c959dd5f342a21ba393399bea75687ad" />
+        <AdsterraNativeBanner />
       </div>
     </div>
   );
