@@ -1,11 +1,11 @@
 "use client";
 
+import { useAdblockDetector } from "@/app/hooks/useAdblockDetector";
 import { VideoPlayerWithAds } from "../../components/VideoPlayerWithAds";
 import { AdsterraNativeBanner } from "../../components/ads/AdsterraNativeBanner";
 import { AdsterraBanner300 } from "../../components/ads/AdsterraBanner300";
 import { AdCashZone } from "../../components/ads/AdCashZone";
 import { MonetagSmartLink } from "../../components/ads/MonetagSmartLink";
-import { AdblockGuard } from "../../components/AdblockGuard";
 
 interface DownloadClientProps {
   title: string;
@@ -13,7 +13,6 @@ interface DownloadClientProps {
   thumbnail: string;
 }
 
-// ID real do AdCash
 const ADCASH_ZONE_ID = "10633666";
 
 export default function DownloadClient({
@@ -21,6 +20,8 @@ export default function DownloadClient({
   downloadUrl,
   thumbnail,
 }: DownloadClientProps) {
+  const { isChecking, isAdblock } = useAdblockDetector();
+
   return (
     <div className="bg-white shadow-lg rounded-2xl p-4 sm:p-6 space-y-8">
       {/* Cabeçalho */}
@@ -32,55 +33,68 @@ export default function DownloadClient({
         </p>
       </header>
 
-      {/* Aviso Anti-AdBlock (modo banner) */}
-      <AdblockGuard mode="banner" />
+      {/* AVISO DE ADBLOCK ATIVO */}
+      {!isChecking && isAdblock && (
+        <div className="bg-yellow-100 border border-yellow-300 text-yellow-800 text-sm p-3 rounded-lg">
+          <strong>Detectamos um bloqueador de anúncios 👀</strong>
+          <br />
+          Para liberar o download, desative o AdBlock para{" "}
+          <span className="font-semibold">monetizacaocortes.online</span>.
+        </div>
+      )}
 
-      {/* Player com pré-roll simples */}
+      {/* Player */}
       <section className="space-y-3">
         <VideoPlayerWithAds src={downloadUrl} poster={thumbnail} />
 
         <p className="text-xs text-gray-400">
-          Esse pequeno anúncio antes do vídeo ajuda a manter o projeto vivo e a
-          produção de novos cortes. 🙌
+          Esse pequeno anúncio antes do vídeo ajuda a manter o projeto vivo. 🙌
         </p>
       </section>
 
-      {/* Botões de download */}
+      {/* Botão de download (bloqueado se AdBlock ativo) */}
       <section className="space-y-4">
-        <a
-          href={downloadUrl}
-          className="w-full inline-flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-3 rounded-lg font-semibold text-sm transition-colors"
-          download
+        <button
+          disabled={isAdblock}
+          onClick={() => {
+            if (!isAdblock) {
+              window.location.href = downloadUrl;
+            }
+          }}
+          className={`w-full inline-flex items-center justify-center gap-2 px-4 py-3 rounded-lg font-semibold text-sm transition
+            ${
+              isAdblock
+                ? "bg-gray-400 cursor-not-allowed text-gray-200"
+                : "bg-blue-600 hover:bg-blue-700 text-white"
+            }`}
         >
           ⬇️ Baixar arquivo de vídeo
-        </a>
+        </button>
 
-        {/* SmartLink Monetag */}
+        {/* SmartLink */}
         <div className="text-center">
           <MonetagSmartLink />
         </div>
       </section>
 
-      {/* BLOCO DE ANÚNCIOS */}
+      {/* Banners */}
       <section className="grid gap-6 md:grid-cols-2">
         {/* Native Adsterra */}
         <div className="border border-gray-100 rounded-xl p-4">
           <h2 className="text-xs font-semibold text-gray-500 mb-2">
             Conteúdo recomendado (Adsterra)
           </h2>
-
           <div className="flex justify-center">
             <AdsterraNativeBanner />
           </div>
         </div>
 
-        {/* AdCash + Banner 300x250 Adsterra */}
+        {/* AdCash + Banner 300 */}
         <div className="border border-gray-100 rounded-xl p-4 space-y-4">
           <h2 className="text-xs font-semibold text-gray-500">
             Mais oportunidades de ganho 💰
           </h2>
 
-          {/* AdCash Zone */}
           <div
             className="w-full flex justify-center items-center border border-gray-200 rounded-lg bg-gray-50"
             style={{ minHeight: 260 }}
@@ -91,7 +105,6 @@ export default function DownloadClient({
             />
           </div>
 
-          {/* Banner Adsterra 300x250 */}
           <div
             className="w-full flex justify-center items-center border border-gray-200 rounded-lg bg-gray-50"
             style={{ minHeight: 260 }}
