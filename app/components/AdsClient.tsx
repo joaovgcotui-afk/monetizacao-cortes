@@ -3,6 +3,7 @@
 import { usePathname } from "next/navigation";
 import { AdsterraSocialBar } from "./ads/AdsterraSocialBar";
 import { AdsterraPopunder } from "./ads/AdsterraPopunder";
+import { MonetagSticky } from "./ads/MonetagSticky";
 
 export function AdsClient() {
   const pathname = usePathname();
@@ -10,11 +11,9 @@ export function AdsClient() {
 
   return (
     <>
-      {/* Social Bar em todas as páginas */}
       <AdsterraSocialBar />
-
-      {/* Popunder só na página de download (mais agressivo) */}
       {isDownloadPage && <AdsterraPopunder />}
+      <MonetagSticky />
     </>
   );
 }
