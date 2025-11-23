@@ -1,8 +1,7 @@
 export const thumbnails: Record<string, string> = {
-  // ASMR
-  asmr: "https://firebasestorage.googleapis.com/v0/b/monetizacao-cortes-studio.firebasestorage.app/o/thumbnails%2Fasmr%2Fasmr.jpg?alt=media&token=586b4e60-91d3-4cbf-beed-68cc9843f07a",
+  asmr:
+    "https://firebasestorage.googleapis.com/v0/b/monetizacao-cortes-studio.firebasestorage.app/o/thumbnails%2Fasmr%2Fasmr.jpg?alt=media&token=586b4e60-91d3-4cbf-beed-68cc9843f07a",
 
-  // AUTOMOTIVO
   automobilismo:
     "https://firebasestorage.googleapis.com/v0/b/monetizacao-cortes-studio.firebasestorage.app/o/thumbnails%2Fautomotivo%2Fautomobilismo.jpg?alt=media&token=87e45df2-dcf9-4997-bda1-0e10f3fd6d92",
 
@@ -18,13 +17,21 @@ export const thumbnails: Record<string, string> = {
   "carros-variados":
     "https://firebasestorage.googleapis.com/v0/b/monetizacao-cortes-studio.firebasestorage.app/o/thumbnails%2Fautomotivo%2Fcarros-variados.jpg?alt=media&token=92364d8a-958e-4405-a0d5-cec2679bda5b",
 
-  // CONSERTOS
-  consertos:
-    "https://firebasestorage.googleapis.com/v0/b/monetizacao-cortes-studio.firebasestorage.app/o/thumbnails%2Fconsertos%2Fconsertos.jpg?alt=media&token=a1fdd4ef-0791-4646-a064-0a7f07653b11",
+  "cuidado-pessoal":
+    "https://firebasestorage.googleapis.com/v0/b/monetizacao-cortes-studio.firebasestorage.app/o/thumbnails%2Fcuidado-pessoal%2Fcuidado-pessoal.jpg?alt=media&token=ece3a126-8805-4591-bf0a-11bc72808cd1",
 
-  marcenaria:
-    "https://firebasestorage.googleapis.com/v0/b/monetizacao-cortes-studio.firebasestorage.app/o/thumbnails%2Fconsertos%2Fmarcenaria.jpg?alt=media&token=58e9a591-6760-4c86-b468-a426271c287a",
+  diy:
+    "https://firebasestorage.googleapis.com/v0/b/monetizacao-cortes-studio.firebasestorage.app/o/thumbnails%2Fdiy-faca-em-casa%2Fdiy-faca-em-casa.png?alt=media&token=9d373219-858a-41af-9b27-621f1e23a44c",
 
-  restauracao:
-    "https://firebasestorage.googleapis.com/v0/b/monetizacao-cortes-studio.firebasestorage.app/o/thumbnails%2Fconsertos%2Frestauracao.jpg?alt=media&token=65e39e2f-3102-42fc-bbaa-8053ec4733b6",
+  "falhas-e-tombos":
+    "https://firebasestorage.googleapis.com/v0/b/monetizacao-cortes-studio.firebasestorage.app/o/thumbnails%2Ffalhas-e-tombos%2Ffalhas-e-tombos.jpg?alt=media&token=54ad2feb-a433-4ac3-aa3b-f6e2f2dc3561",
+
+  insetos:
+    "https://firebasestorage.googleapis.com/v0/b/monetizacao-cortes-studio.firebasestorage.app/o/thumbnails%2Finsetos%2Finsetos.jpg?alt=media&token=a2742a15-0369-4bcf-824f-26c59fec022c",
+
+  "ia-variados":
+    "https://firebasestorage.googleapis.com/v0/b/monetizacao-cortes-studio.firebasestorage.app/o/thumbnails%2Fia-variados%2Fia-variados.jpg?alt=media&token=a3d4a5d7-b36b-4279-8706-8888dffd1678",
+
+  "ia-gatinhos":
+    "https://firebasestorage.googleapis.com/v0/b/monetizacao-cortes-studio.firebasestorage.app/o/thumbnails%2Fia-gatinhos%2Fia-gatinhos.png?alt=media&token=2fafbacc-b8be-4ed9-aa6c-ab1fdf29aad9",
 };
