@@ -1,45 +1,38 @@
-export interface VideoItem {
-  slug: string; // usado na rota /download/[slug]
-  title: string; // nome exibido no card e página de download
-  thumbnail: string; // imagem do card
-  category: string; // slug da categoria
-  downloadUrl: string; // link direto do Firebase Storage
-}
+// ================================
+//  IMPORTAR TODAS AS CATEGORIAS
+// ================================
+import { videos as asmr } from "./videos/videos_asmr";
+// import { videos as automobilismo } from "./videos/videos_automobilismo";
+// import { videos as caminhoes } from "./videos/videos_caminhoes";
+// import { videos as carrosEsportivos } from "./videos/videos_carros-esportivos";
+// import { videos as carrosLuxuosos } from "./videos/videos_carros-luxuosos";
+// import { videos as carrosVariados } from "./videos/videos_carros-variados";
+// import { videos as cuidadoPessoal } from "./videos/videos_cuidado-pessoal";
+// import { videos as diy } from "./videos/videos_diy";
+// import { videos as falhas } from "./videos/videos_falhas-e-tombos";
+// import { videos as insetos } from "./videos/videos_insetos";
+// import { videos as iaVariados } from "./videos/videos_ia-variados";
+// import { videos as iaGatinhos } from "./videos/videos_ia-gatinhos";
 
-// LISTA DE VÍDEOS
-export const videos: VideoItem[] = [
-  // EXEMPLO (vídeo ASMR já enviado por você)
-  {
-    slug: "asmr-1",
-    title: "ASMR 1",
-    thumbnail: "https://placehold.co/600x400?text=ASMR+1",
-    category: "asmr",
-    downloadUrl:
-      "https://firebasestorage.googleapis.com/v0/b/monetizacao-cortes-studio.firebasestorage.app/o/ASMR1.mp4?alt=media&token=5389e7fb-61d1-4c09-962b-40fb2e532e37",
-  },
 
-  // Exemplo de estrutura correta para outros vídeos:
-  /*
-  {
-    slug: "carros-esportivos-1",
-    title: "Carros Esportivos 1",
-    thumbnail: "https://placehold.co/600x400?text=Carros+Esportivos+1",
-    category: "carros-esportivos",
-    downloadUrl: "URL_DO_FIREBASE_AQUI",
-  },
-  {
-    slug: "religiao-claudio-duarte-1",
-    title: "Claudio Duarte - Pregação 1",
-    thumbnail: "https://placehold.co/600x400?text=Claudio+Duarte+1",
-    category: "religiao-claudio-duarte",
-    downloadUrl: "URL_DO_FIREBASE_AQUI",
-  },
-  {
-    slug: "saude-narrados-1",
-    title: "Saúde Narrados 1",
-    thumbnail: "https://placehold.co/600x400?text=Saude+1",
-    category: "saude-narrados",
-    downloadUrl: "URL_DO_FIREBASE_AQUI",
-  },
-  */
+// ==================================================
+//  ARRAY FINAL — TODOS OS VÍDEOS DO SITE
+// ==================================================
+export const videos = [
+  ...asmr,
+
+  // Quando você gerar as outras categorias, basta ir removendo os "//"
+  // e adicionando os spreads abaixo:
+
+  // ...automobilismo,
+  // ...caminhoes,
+  // ...carrosEsportivos,
+  // ...carrosLuxuosos,
+  // ...carrosVariados,
+  // ...cuidadoPessoal,
+  // ...diy,
+  // ...falhas,
+  // ...insetos,
+  // ...iaVariados,
+  // ...iaGatinhos,
 ];
