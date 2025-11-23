@@ -1,3 +1,6 @@
+import { thumbnails } from "@/data/thumbnails";
+
+
 export const videos = [
   {
     slug: "asmr-14",
