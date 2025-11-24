@@ -1,5 +1,4 @@
 // app/categoria/[slug]/page.tsx
-"use client";
 
 import Link from "next/link";
 import { videos } from "@/data/videos";
@@ -11,8 +10,8 @@ export default function CategoriaPage({
 }) {
   const { slug } = params;
 
-  // Filtrar vídeos reais pela categoria
-  const filtered = videos.filter((v) => v.category === slug);
+  // Filtra vídeos REAIS pelo slug da categoria
+  const lista = videos.filter((v) => v.category === slug);
 
   return (
     <main className="min-h-screen bg-gray-50">
@@ -23,32 +22,32 @@ export default function CategoriaPage({
             ← Voltar
           </Link>
 
-          <h1 className="text-xl font-bold text-gray-900 capitalize">
+          <h1 className="text-xl font-bold text-gray-900">
             Categoria: {slug}
           </h1>
         </div>
       </header>
 
       <section className="max-w-6xl mx-auto px-6 py-8">
-        {/* Se não tiver vídeos */}
-        {filtered.length === 0 && (
-          <p className="text-gray-600">
-            Nenhum vídeo encontrado para esta categoria.
+        {/* Se não existir vídeo */}
+        {lista.length === 0 && (
+          <p className="text-gray-600 text-center pt-20">
+            Nenhum vídeo encontrado para essa categoria.
           </p>
         )}
 
-        {/* GRID REAL */}
+        {/* GRID DE VÍDEOS */}
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {filtered.map((v) => (
+          {lista.map((v) => (
             <div
               key={v.slug}
-              className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition"
+              className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden"
             >
               <div className="relative h-40 bg-gray-200">
                 <img
                   src={v.thumbnail}
-                  alt={v.title}
                   className="w-full h-full object-cover"
+                  alt={v.title}
                 />
               </div>
 
