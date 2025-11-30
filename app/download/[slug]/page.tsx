@@ -1,50 +1,54 @@
-// app/download/[slug]/page.tsx
-"use client";
+import { videos_asmr } from '@/data/videos/videos_asmr'
+import { videos_automobilismo } from '@/data/videos/videos_automobilismo'
+import { videos_caminhoes } from '@/data/videos/videos_caminhoes'
 
-import { videos } from "@/data/videos";
-import DownloadClient from "./DownloadClient";
+import { buildFirebaseUrl } from '@/data/videos/urlBuilder'
+import type { VideoItem } from '@/data/videos/videos_asmr'
 
-export default function DownloadPage({
+export const dynamic = 'force-static'
+
+export default async function DownloadPage({
   params,
 }: {
-  params: { slug: string };
+  params: Promise<{ slug: string }>
 }) {
-  const { slug } = params;
+  const { slug } = await params
 
-  // Buscar vídeo REAL pelo slug
-  const video = videos.find((v) => v.slug === slug);
+  const allVideos: VideoItem[] = [
+    ...videos_asmr,
+    ...videos_automobilismo,
+    ...videos_caminhoes,
+  ]
+
+  const video = allVideos.find((v) => v.slug === slug)
 
   if (!video) {
     return (
-      <main className="min-h-screen flex items-center justify-center bg-gray-50 px-6">
-        <div className="text-center space-y-4">
-          <h1 className="text-2xl font-bold text-gray-800">
-            Vídeo não encontrado 😕
-          </h1>
-          <p className="text-gray-600">
-            O vídeo solicitado não existe ou foi removido.
-          </p>
-
-          <a
-            href="/"
-            className="inline-block bg-blue-600 text-white px-4 py-2 rounded-lg"
-          >
-            Voltar ao início
-          </a>
-        </div>
-      </main>
-    );
+      <div className="p-10 text-center">
+        <h1 className="text-2xl font-bold">Vídeo não encontrado</h1>
+      </div>
+    )
   }
 
+  const videoUrl = buildFirebaseUrl(video.category, video.fileName)
+
   return (
-    <main className="min-h-screen bg-gray-50 flex items-center justify-center px-4 sm:px-6">
-      <div className="max-w-3xl w-full py-8">
-        <DownloadClient
-          title={video.title}
-          downloadUrl={video.downloadUrl}
-          thumbnail={video.thumbnail}
-        />
-      </div>
-    </main>
-  );
+    <div className="p-10 max-w-3xl mx-auto">
+      <h1 className="text-3xl font-bold mb-4">{video.title}</h1>
+
+      <video
+        src={videoUrl}
+        controls
+        className="w-full rounded-lg border border-gray-700 mb-6"
+      />
+
+      <a
+        href={videoUrl}
+        download
+        className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg"
+      >
+        Baixar Vídeo
+      </a>
+    </div>
+  )
 }
