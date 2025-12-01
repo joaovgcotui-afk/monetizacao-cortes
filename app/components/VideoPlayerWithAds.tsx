@@ -17,9 +17,10 @@ export function VideoPlayerWithAds({ src, poster }: VideoPlayerWithAdsProps) {
 
   useEffect(() => {
     if (!videoRef.current) return
-    if (!adsLoaded || !imaLoaded) return // ESPERA AMBOS OS PLUGINS CARREGAREM
+    if (!adsLoaded || !imaLoaded) return
 
-    const player = videojs(videoRef.current, {
+    // @ts-expect-error  – ignorar plugin sem tipos
+    const player: any = videojs(videoRef.current, {
       controls: true,
       preload: 'auto',
       fluid: true,
@@ -27,8 +28,10 @@ export function VideoPlayerWithAds({ src, poster }: VideoPlayerWithAdsProps) {
       poster,
     })
 
-    // Inicializa plugins
-    player.ads() // agora existe
+    // @ts-expect-error – ignorar plugin sem tipos
+    player.ads()
+
+    // @ts-expect-error – ignorar plugin sem tipos
     player.ima({
       adTagUrl: 'https://vod.adcash.com/vast-test.xml',
       debug: true,
@@ -41,26 +44,27 @@ export function VideoPlayerWithAds({ src, poster }: VideoPlayerWithAdsProps) {
 
   return (
     <>
-      {/* PLUGIN DE ADS */}
+      {/* Plugin ADS */}
       <Script
         src="https://cdnjs.cloudflare.com/ajax/libs/videojs-contrib-ads/6.9.0/videojs-contrib-ads.min.js"
         strategy="afterInteractive"
         onLoad={() => setAdsLoaded(true)}
       />
 
-      {/* PLUGIN DE IMA + SDK DO GOOGLE */}
+      {/* Plugin IMA */}
       <Script
         src="https://cdn.jsdelivr.net/npm/videojs-ima@1.11.0/dist/videojs.ima.min.js"
         strategy="afterInteractive"
         onLoad={() => setImaLoaded(true)}
       />
 
+      {/* SDK Google */}
       <Script
         src="https://imasdk.googleapis.com/js/sdkloader/ima3.js"
         strategy="afterInteractive"
       />
 
-      {/* CSS DO IMA */}
+      {/* CSS do IMA */}
       <link
         rel="stylesheet"
         href="https://cdn.jsdelivr.net/npm/videojs-ima@1.11.0/dist/videojs.ima.css"
