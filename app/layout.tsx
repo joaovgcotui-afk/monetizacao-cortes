@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import './globals.css'
 import { AdsClient } from './components/AdsClient'
+import Script from 'next/script'
 
 export const metadata: Metadata = {
   title: 'Monetização Cortes Studio',
@@ -15,18 +16,6 @@ export default function RootLayout({
   return (
     <html lang="pt-BR">
       <head>
-        {/* CSS do FluidPlayer */}
-        <link
-          rel="stylesheet"
-          href="https://cdn.fluidplayer.com/v3/current/fluidplayer.min.css"
-        />
-
-        {/* JS do FluidPlayer */}
-        <script
-          src="https://cdn.fluidplayer.com/v3/current/fluidplayer.min.js"
-          defer
-        ></script>
-
         {/* Monetag Site Verification */}
         <meta name="monetag" content="743381a3c558995ad993355162fc7956" />
       </head>
