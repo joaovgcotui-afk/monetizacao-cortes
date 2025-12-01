@@ -1,7 +1,12 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
-import Script from 'next/script'
+import { useEffect, useRef } from 'react'
+import videojs from 'video.js'
+import 'video.js/dist/video-js.css'
+
+// plugins
+import 'videojs-contrib-ads'
+import 'videojs-ima'
 
 interface VideoPlayerWithAdsProps {
   src: string
@@ -10,68 +15,51 @@ interface VideoPlayerWithAdsProps {
 
 export function VideoPlayerWithAds({ src, poster }: VideoPlayerWithAdsProps) {
   const videoRef = useRef<HTMLVideoElement | null>(null)
-  const [scriptLoaded, setScriptLoaded] = useState(false)
+  const playerRef = useRef<any>(null)
 
   useEffect(() => {
-    if (!scriptLoaded) return
     if (!videoRef.current) return
 
-    const fp = (window as any).fluidPlayer
-    if (!fp) return
+    if (!playerRef.current) {
+      playerRef.current = videojs(videoRef.current, {
+        controls: true,
+        preload: 'auto',
+        autoplay: false,
+        fluid: true,
+        poster,
+      })
 
-    const player = fp(videoRef.current, {
-      layoutControls: {
-        fillToContainer: true,
-        posterImage: poster || '',
-        autoPlay: false,
-        mute: false,
-        allowTheatre: true,
-        allowFullscreen: true,
-        allowDownload: false,
-        primaryColor: '#00c3ff',
-      },
-      vastOptions: {
-        adList: [
-          {
-            roll: 'preRoll',
-            vastTag: 'https://vod.adcash.com/vast-test.xml',
-            adText: 'Seu vídeo começará após o anúncio...',
-            adTextPosition: 'bottom right',
-          },
-        ],
-      },
-    })
+      // inicializar ads plugin
+      playerRef.current.ads()
+
+      // configurar VAST via IMA
+      playerRef.current.ima({
+        id: 'video-player',
+        adTagUrl: 'https://vod.adcash.com/vast-test.xml', // TAG DE TESTE
+        debug: true,
+        adsManagerLoadedCallback: () => {
+          console.log('IMA Ads Manager Loaded')
+        },
+      })
+    }
 
     return () => {
-      try {
-        player?.destroy()
-      } catch {}
+      if (playerRef.current) {
+        playerRef.current.dispose()
+        playerRef.current = null
+      }
     }
-  }, [scriptLoaded, src, poster])
+  }, [src, poster])
 
   return (
-    <>
-      {/* Carregar o script da CDN corretamente via Next.js */}
-      <Script
-        src="https://cdn.fluidplayer.com/v3/current/fluidplayer.min.js"
-        strategy="afterInteractive"
-        onLoad={() => setScriptLoaded(true)}
-      />
-
-      {/* Carregar o CSS globalmente */}
-      <link
-        rel="stylesheet"
-        href="https://cdn.fluidplayer.com/v3/current/fluidplayer.min.css"
-      />
-
+    <div data-vjs-player>
       <video
         ref={videoRef}
+        className="video-js vjs-default-skin vjs-big-play-centered"
         playsInline
-        controls={false}
-        className="w-full rounded-lg overflow-hidden"
       >
         <source src={src} type="video/mp4" />
       </video>
-    </>
+    </div>
   )
 }
