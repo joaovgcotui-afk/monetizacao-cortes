@@ -1,15 +1,14 @@
-import { videos_asmr } from '../../../data/videos/videos_asmr'
-import { videos_automobilismo } from '../../../data/videos/videos_automobilismo'
-import { videos_caminhoes } from '../../../data/videos/videos_caminhoes'
+import { videos_asmr } from '@/data/videos/videos_asmr'
+import { videos_automobilismo } from '@/data/videos/videos_automobilismo'
+import { videos_caminhoes } from '@/data/videos/videos_caminhoes'
 
-import { buildFirebaseUrl } from '../../../data/videos/urlBuilder'
-import type { VideoItem } from '../../../data/videos/videos_asmr'
+import { buildFirebaseUrl } from '@/data/videos/urlBuilder'
+import type { VideoItem } from '@/data/videos/videos_asmr'
 
 import { Waves, Car, Truck, Download } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 
-// 👉 CORREÇÃO DO IMPORT DO PLAYER
-import VideoPlayerWithAds from '../../components/VideoPlayerWithAds'
+import FluidPlayer from '@/app/components/FluidPlayer'
 
 export const dynamic = 'force-static'
 
@@ -27,6 +26,7 @@ export default async function DownloadPage({
   ]
 
   const video = allVideos.find((v) => v.slug === slug)
+
   if (!video) {
     return (
       <main className="text-center text-zinc-200 p-10 bg-zinc-950 min-h-screen">
@@ -44,11 +44,11 @@ export default async function DownloadPage({
   }
 
   const Icon = categoryIcons[video.category] || Waves
-
   const prettyCategory = video.category.replace('-', ' ').toUpperCase()
 
   return (
     <main className="min-h-screen bg-gradient-to-b from-zinc-950 via-zinc-900 to-zinc-950 text-zinc-50">
+      {/* HEADER */}
       <header className="sticky top-0 z-50 border-b border-zinc-800/80 bg-zinc-950/80 backdrop-blur-2xl">
         <div className="max-w-6xl mx-auto px-6 py-4 flex items-center gap-3">
           <Icon className="w-8 h-8 text-blue-500" />
@@ -66,7 +66,7 @@ export default async function DownloadPage({
             p-8 relative overflow-hidden
           "
         >
-          {/* Cabeçalho */}
+          {/* TÍTULO */}
           <div className="flex items-center gap-4 mb-6">
             <Icon className="w-12 h-12 text-blue-500 drop-shadow-md" />
             <div>
@@ -77,21 +77,21 @@ export default async function DownloadPage({
             </div>
           </div>
 
-          {/* PLAYER PREMIUM COM ANÚNCIOS */}
-          <VideoPlayerWithAds src={videoUrl} poster={video.thumbnail} />
+          {/* PLAYER FLUID + VAST */}
+          <FluidPlayer src={videoUrl} poster="" />
 
-          {/* DOWNLOAD */}
+          {/* BOTÃO DE DOWNLOAD */}
           <a
             href={videoUrl}
-            download
+            download={`${video.slug}.mp4`}
+            target="_blank"
+            rel="noopener noreferrer"
             className="
-              flex items-center justify-center gap-2
+              flex items-center justify-center gap-2 mt-6
               bg-gradient-to-r from-blue-600 to-purple-600
               hover:from-blue-500 hover:to-purple-500
-              text-white font-semibold
-              px-6 py-3 rounded-xl
-              shadow-lg hover:shadow-xl
-              transition-all duration-300
+              text-white font-semibold px-6 py-3 rounded-xl
+              shadow-lg hover:shadow-xl transition-all duration-300
             "
           >
             <Download className="w-5 h-5" />

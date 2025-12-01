@@ -1,4 +1,7 @@
-declare module 'fluid-player' {
-  const fluidPlayer: any
-  export default fluidPlayer
+declare global {
+  interface Window {
+    fluidPlayer: any
+  }
 }
+
+export {}
