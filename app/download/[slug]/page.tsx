@@ -5,6 +5,9 @@ import { videos_caminhoes } from '@/data/videos/videos_caminhoes'
 import { buildFirebaseUrl } from '@/data/videos/urlBuilder'
 import type { VideoItem } from '@/data/videos/videos_asmr'
 
+import { Waves, Car, Truck, Download } from 'lucide-react'
+import type { LucideIcon } from 'lucide-react'
+
 export const dynamic = 'force-static'
 
 export default async function DownloadPage({
@@ -21,34 +24,88 @@ export default async function DownloadPage({
   ]
 
   const video = allVideos.find((v) => v.slug === slug)
-
   if (!video) {
     return (
-      <div className="p-10 text-center">
+      <main className="text-center text-zinc-200 p-10 bg-zinc-950 min-h-screen">
         <h1 className="text-2xl font-bold">Vídeo não encontrado</h1>
-      </div>
+      </main>
     )
   }
 
   const videoUrl = buildFirebaseUrl(video.category, video.fileName)
 
+  const categoryIcons: Record<string, LucideIcon> = {
+    asmr: Waves,
+    automobilismo: Car,
+    caminhoes: Truck,
+  }
+
+  const Icon = categoryIcons[video.category] || Waves
+
+  const prettyCategory = video.category.replace('-', ' ').toUpperCase()
+
   return (
-    <div className="p-10 max-w-3xl mx-auto">
-      <h1 className="text-3xl font-bold mb-4">{video.title}</h1>
+    <main className="min-h-screen bg-gradient-to-b from-zinc-950 via-zinc-900 to-zinc-950 text-zinc-50">
+      {/* HEADER */}
+      <header className="sticky top-0 z-50 border-b border-zinc-800/80 bg-zinc-950/80 backdrop-blur-2xl">
+        <div className="max-w-6xl mx-auto px-6 py-4 flex items-center gap-3">
+          <Icon className="w-8 h-8 text-blue-500" />
+          <h1 className="text-xl font-bold tracking-wide truncate">
+            {video.title}
+          </h1>
+        </div>
+      </header>
 
-      <video
-        src={videoUrl}
-        controls
-        className="w-full rounded-lg border border-gray-700 mb-6"
-      />
+      <section className="max-w-4xl mx-auto px-6 py-10">
+        {/* CARD PREMIUM */}
+        <div
+          className="
+            bg-white/5 backdrop-blur-2xl rounded-3xl
+            border border-zinc-700/60 shadow-[0_10px_40px_rgba(0,0,0,0.6)]
+            p-8 relative overflow-hidden
+          "
+        >
+          {/* cabeçalho */}
+          <div className="flex items-center gap-4 mb-6">
+            <Icon className="w-12 h-12 text-blue-500 drop-shadow-md" />
+            <div>
+              <h2 className="text-xl font-semibold">{video.title}</h2>
+              <span className="text-xs px-3 py-1 rounded-full bg-blue-900/70 text-blue-300 shadow-sm">
+                {prettyCategory}
+              </span>
+            </div>
+          </div>
 
-      <a
-        href={videoUrl}
-        download
-        className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg"
-      >
-        Baixar Vídeo
-      </a>
-    </div>
+          {/* PLAYER PREMIUM */}
+          <video
+            src={videoUrl}
+            controls
+            className="
+              w-full rounded-2xl mb-6
+              shadow-[0_0_25px_rgba(0,0,0,0.2)]
+              border border-zinc-700
+            "
+          />
+
+          {/* DOWNLOAD */}
+          <a
+            href={videoUrl}
+            download
+            className="
+              flex items-center justify-center gap-2
+              bg-gradient-to-r from-blue-600 to-purple-600
+              hover:from-blue-500 hover:to-purple-500
+              text-white font-semibold
+              px-6 py-3 rounded-xl
+              shadow-lg hover:shadow-xl
+              transition-all duration-300
+            "
+          >
+            <Download className="w-5 h-5" />
+            Baixar vídeo
+          </a>
+        </div>
+      </section>
+    </main>
   )
 }
