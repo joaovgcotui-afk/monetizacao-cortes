@@ -1,61 +1,40 @@
-'use client'
+import type { Metadata } from 'next'
+import './globals.css'
+import { AdsClient } from './components/AdsClient'
 
-import { useEffect, useRef } from 'react'
-
-interface VideoPlayerWithAdsProps {
-  src: string
-  poster?: string
+export const metadata: Metadata = {
+  title: 'Monetização Cortes Studio',
+  description: 'Cortes prontos para ganhar dinheiro',
 }
 
-export function VideoPlayerWithAds({ src, poster }: VideoPlayerWithAdsProps) {
-  const videoRef = useRef<HTMLVideoElement | null>(null)
-
-  useEffect(() => {
-    if (!videoRef.current) return
-    if (typeof window === 'undefined') return
-
-    const fluidPlayer = (window as any).fluidPlayer
-    if (!fluidPlayer) return
-
-    const player = fluidPlayer(videoRef.current, {
-      layoutControls: {
-        fillToContainer: true,
-        posterImage: poster || '',
-        autoPlay: false,
-        mute: false,
-        allowTheatre: true,
-        allowTheatreFullscreen: true,
-        allowFullscreen: true,
-        primaryColor: '#00c3ff',
-      },
-      vastOptions: {
-        adList: [
-          {
-            roll: 'preRoll',
-            vastTag: 'https://vod.adcash.com/vast-test.xml',
-            adText: 'Seu vídeo começará após o anúncio...',
-            adTextPosition: 'bottom right',
-          },
-        ],
-        showPlayButton: true,
-      },
-    })
-
-    return () => {
-      try {
-        player?.destroy()
-      } catch {}
-    }
-  }, [src, poster])
-
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode
+}) {
   return (
-    <video
-      ref={videoRef}
-      playsInline
-      controls={false}
-      className="w-full rounded-lg overflow-hidden"
-    >
-      <source src={src} type="video/mp4" />
-    </video>
+    <html lang="pt-BR">
+      <head>
+        {/* CSS do FluidPlayer */}
+        <link
+          rel="stylesheet"
+          href="https://cdn.fluidplayer.com/v3/current/fluidplayer.min.css"
+        />
+
+        {/* JS do FluidPlayer */}
+        <script
+          src="https://cdn.fluidplayer.com/v3/current/fluidplayer.min.js"
+          defer
+        ></script>
+
+        {/* Monetag Site Verification */}
+        <meta name="monetag" content="743381a3c558995ad993355162fc7956" />
+      </head>
+
+      <body className="bg-gray-50">
+        <AdsClient />
+        {children}
+      </body>
+    </html>
   )
 }
