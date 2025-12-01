@@ -1,63 +1,59 @@
-"use client";
+'use client'
 
-import { useEffect, useState } from "react";
+import { useEffect } from 'react'
+import fluidPlayer from 'fluid-player'
 
 interface VideoPlayerWithAdsProps {
-  src: string;
-  poster: string;
+  src: string
+  poster?: string
 }
 
 export function VideoPlayerWithAds({ src, poster }: VideoPlayerWithAdsProps) {
-  const [showMainVideo, setShowMainVideo] = useState(false);
-  const [countdown, setCountdown] = useState(5);
-
-  // Controle do contador
   useEffect(() => {
-    if (showMainVideo) return;
+    if (typeof window === 'undefined') return
 
-    if (countdown <= 0) {
-      // dispara troca de vídeo em um microtask para evitar warning
-      Promise.resolve().then(() => setShowMainVideo(true));
-      return;
+    const player = fluidPlayer('video-player', {
+      layoutControls: {
+        fillToContainer: true,
+        posterImage: poster || '',
+        autoPlay: false,
+        mute: false,
+
+        allowTheatre: true,
+        allowTheatreFullscreen: true, // NOME CORRETO
+        allowDownload: false,
+        allowFullscreen: true,
+        primaryColor: '#00c3ff',
+      },
+
+      vastOptions: {
+        adList: [
+          {
+            roll: 'preRoll',
+            vastTag: 'https://youradexchange.com/video/select.php?r=10666514',
+            adText: 'Seu vídeo começará após o anúncio...',
+            adTextPosition: 'bottom right', // POSIÇÃO VÁLIDA
+          },
+        ],
+        showPlayButton: true,
+      },
+    })
+
+    return () => {
+      try {
+        player?.destroy()
+      } catch {}
     }
+  }, [src, poster])
 
-    const interval = setInterval(() => {
-      setCountdown((prev) => prev - 1);
-    }, 1000);
-
-    return () => clearInterval(interval);
-  }, [countdown, showMainVideo]);
-
-  // Quando terminar o anúncio -> mostrar vídeo principal
-  if (showMainVideo) {
-    return (
-      <video
-        src={src}
-        poster={poster}
-        className="w-full rounded-lg"
-        controls
-        autoPlay
-      />
-    );
-  }
-
-  // Tela de “pré-roll”
   return (
-    <div className="w-full rounded-lg bg-black text-white flex flex-col items-center justify-center aspect-video space-y-3">
-      <p className="text-sm opacity-80">
-        Anúncio rápido antes do vídeo principal.
-      </p>
-
-      <p className="text-lg font-semibold">
-        Seu vídeo começa em {countdown}s...
-      </p>
-
-      <button
-        onClick={() => setShowMainVideo(true)}
-        className="mt-2 px-4 py-2 text-sm rounded bg-white text-black hover:bg-gray-200 transition"
-      >
-        Pular anúncio e assistir agora
-      </button>
-    </div>
-  );
+    <video
+      id="video-player"
+      controls
+      playsInline
+      className="w-full h-auto rounded-lg overflow-hidden"
+    >
+      <source src={src} type="video/mp4" />
+    </video>
+  )
 }

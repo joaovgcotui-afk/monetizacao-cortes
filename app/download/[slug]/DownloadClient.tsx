@@ -1,18 +1,18 @@
-"use client";
+'use client'
 
-import { VideoPlayerWithAds } from "../../components/VideoPlayerWithAds";
-import { AdsterraNativeBanner } from "../../components/ads/AdsterraNativeBanner";
-import { AdsterraBanner300 } from "../../components/ads/AdsterraBanner300";
-import { AdCashZone } from "../../components/ads/AdCashZone";
-import { MonetagSmartLink } from "../../components/ads/MonetagSmartLink";
+import { VideoPlayerWithAds } from '../../components/VideoPlayerWithAds'
+import { AdsterraNativeBanner } from '../../components/ads/AdsterraNativeBanner'
+import { AdsterraBanner300 } from '../../components/ads/AdsterraBanner300'
+import { AdCashZone } from '../../components/ads/AdCashZone'
+import { MonetagSmartLink } from '../../components/ads/MonetagSmartLink'
 
 interface DownloadClientProps {
-  title: string;
-  downloadUrl: string;
-  thumbnail: string;
+  title: string
+  downloadUrl: string
+  thumbnail: string
 }
 
-const ADCASH_ZONE_ID = "10633666";
+const ADCASH_ZONE_ID = '10633666'
 
 export default function DownloadClient({
   title,
@@ -24,7 +24,6 @@ export default function DownloadClient({
       {/* HEADER */}
       <header className="space-y-2 text-center">
         <h1 className="text-3xl font-extrabold text-gray-900">{title}</h1>
-
         <p className="text-gray-600 text-sm">
           Assista rapidamente e baixe o arquivo em alta qualidade.
         </p>
@@ -41,7 +40,7 @@ export default function DownloadClient({
         </p>
       </section>
 
-      {/* DOWNLOAD */}
+      {/* DOWNLOAD BUTTON */}
       <section className="space-y-4 text-center">
         <a
           href={downloadUrl}
@@ -96,5 +95,5 @@ export default function DownloadClient({
         </div>
       </section>
     </div>
-  );
+  )
 }
