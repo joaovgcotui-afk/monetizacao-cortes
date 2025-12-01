@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import fluidPlayer from 'fluid-player'
 
 interface VideoPlayerWithAdsProps {
@@ -9,30 +9,33 @@ interface VideoPlayerWithAdsProps {
 }
 
 export function VideoPlayerWithAds({ src, poster }: VideoPlayerWithAdsProps) {
+  const videoRef = useRef<HTMLVideoElement | null>(null)
+
   useEffect(() => {
+    if (!videoRef.current) return
     if (typeof window === 'undefined') return
 
-    const player = fluidPlayer('video-player', {
+    // Inicializar somente quando o vídeo existir
+    const player = fluidPlayer(videoRef.current, {
       layoutControls: {
         fillToContainer: true,
         posterImage: poster || '',
         autoPlay: false,
         mute: false,
-
         allowTheatre: true,
-        allowTheatreFullscreen: true, // NOME CORRETO
+        allowTheatreFullscreen: true,
         allowDownload: false,
         allowFullscreen: true,
         primaryColor: '#00c3ff',
       },
-
       vastOptions: {
         adList: [
           {
             roll: 'preRoll',
-            vastTag: 'https://youradexchange.com/video/select.php?r=10666514',
+            // TESTE GARANTIDO
+            vastTag: 'https://vod.adcash.com/vast-test.xml',
             adText: 'Seu vídeo começará após o anúncio...',
-            adTextPosition: 'bottom right', // POSIÇÃO VÁLIDA
+            adTextPosition: 'bottom right',
           },
         ],
         showPlayButton: true,
@@ -48,8 +51,9 @@ export function VideoPlayerWithAds({ src, poster }: VideoPlayerWithAdsProps) {
 
   return (
     <video
+      ref={videoRef}
       id="video-player"
-      controls
+      controls={false} // REMOVE CONTROLES DO PLAYER NATIVO
       playsInline
       className="w-full h-auto rounded-lg overflow-hidden"
     >
