@@ -1,12 +1,15 @@
-import { videos_asmr } from '@/data/videos/videos_asmr'
-import { videos_automobilismo } from '@/data/videos/videos_automobilismo'
-import { videos_caminhoes } from '@/data/videos/videos_caminhoes'
+import { videos_asmr } from '../../../data/videos/videos_asmr'
+import { videos_automobilismo } from '../../../data/videos/videos_automobilismo'
+import { videos_caminhoes } from '../../../data/videos/videos_caminhoes'
 
-import { buildFirebaseUrl } from '@/data/videos/urlBuilder'
-import type { VideoItem } from '@/data/videos/videos_asmr'
+import { buildFirebaseUrl } from '../../../data/videos/urlBuilder'
+import type { VideoItem } from '../../../data/videos/videos_asmr'
 
 import { Waves, Car, Truck, Download } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
+
+// 👉 CORREÇÃO DO IMPORT DO PLAYER
+import VideoPlayerWithAds from '../../components/VideoPlayerWithAds'
 
 export const dynamic = 'force-static'
 
@@ -46,7 +49,6 @@ export default async function DownloadPage({
 
   return (
     <main className="min-h-screen bg-gradient-to-b from-zinc-950 via-zinc-900 to-zinc-950 text-zinc-50">
-      {/* HEADER */}
       <header className="sticky top-0 z-50 border-b border-zinc-800/80 bg-zinc-950/80 backdrop-blur-2xl">
         <div className="max-w-6xl mx-auto px-6 py-4 flex items-center gap-3">
           <Icon className="w-8 h-8 text-blue-500" />
@@ -57,7 +59,6 @@ export default async function DownloadPage({
       </header>
 
       <section className="max-w-4xl mx-auto px-6 py-10">
-        {/* CARD PREMIUM */}
         <div
           className="
             bg-white/5 backdrop-blur-2xl rounded-3xl
@@ -65,7 +66,7 @@ export default async function DownloadPage({
             p-8 relative overflow-hidden
           "
         >
-          {/* cabeçalho */}
+          {/* Cabeçalho */}
           <div className="flex items-center gap-4 mb-6">
             <Icon className="w-12 h-12 text-blue-500 drop-shadow-md" />
             <div>
@@ -76,16 +77,8 @@ export default async function DownloadPage({
             </div>
           </div>
 
-          {/* PLAYER PREMIUM */}
-          <video
-            src={videoUrl}
-            controls
-            className="
-              w-full rounded-2xl mb-6
-              shadow-[0_0_25px_rgba(0,0,0,0.2)]
-              border border-zinc-700
-            "
-          />
+          {/* PLAYER PREMIUM COM ANÚNCIOS */}
+          <VideoPlayerWithAds src={videoUrl} poster={video.thumbnail} />
 
           {/* DOWNLOAD */}
           <a

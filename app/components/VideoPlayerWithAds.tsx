@@ -1,84 +1,89 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
-import Script from 'next/script'
-import videojs from 'video.js'
-import 'video.js/dist/video-js.css'
+import { useEffect, useRef } from 'react'
 
-interface VideoPlayerWithAdsProps {
-  src: string
-  poster?: string
+declare global {
+  interface Window {
+    google: any
+  }
 }
 
-export function VideoPlayerWithAds({ src, poster }: VideoPlayerWithAdsProps) {
+export default function VideoPlayerWithAds({
+  src,
+  poster,
+}: {
+  src: string
+  poster?: string
+}) {
   const videoRef = useRef<HTMLVideoElement | null>(null)
-  const [ready, setReady] = useState(false)
+  const adContainerRef = useRef<HTMLDivElement | null>(null)
 
   useEffect(() => {
-    if (!videoRef.current || !ready) return
+    if (!videoRef.current || !adContainerRef.current) return
 
-    // Os plugins DO CDN serão adicionados ao window.videojs automaticamente
-    const player = (window as any).videojs(videoRef.current, {
-      controls: true,
-      preload: 'auto',
-      fluid: true,
-      autoplay: false,
-      poster,
-    })
+    // 👉 Carregar Script do Google IMA
+    const imaScript = document.createElement('script')
+    imaScript.src = 'https://imasdk.googleapis.com/js/sdkloader/ima3.js'
+    imaScript.async = true
+    imaScript.onload = startAds
+    document.body.appendChild(imaScript)
 
-    // Inicializar Sistema de Anúncios
-    if (player.ads) {
-      player.ads()
+    function startAds() {
+      const videoElement = videoRef.current!
+      const adContainer = adContainerRef.current!
+
+      const adDisplayContainer = new window.google.ima.AdDisplayContainer(
+        adContainer,
+        videoElement,
+      )
+
+      const adsLoader = new window.google.ima.AdsLoader(adDisplayContainer)
+
+      const adsRequest = new window.google.ima.AdsRequest()
+      adsRequest.adTagUrl = 'https://vod.adcash.com/vast-test.xml'
+
+      adsLoader.addEventListener(
+        window.google.ima.AdsManagerLoadedEvent.Type.ADS_MANAGER_LOADED,
+        (e: any) => {
+          const adsManager = e.getAdsManager(videoElement)
+
+          videoElement.addEventListener('play', () => {
+            adDisplayContainer.initialize()
+          })
+
+          try {
+            adsManager.init(640, 360, window.google.ima.ViewMode.NORMAL)
+            adsManager.start()
+          } catch (err) {
+            console.warn('Erro ao iniciar ads:', err)
+            videoElement.play()
+          }
+        },
+      )
+
+      adsLoader.requestAds(adsRequest)
     }
 
-    // Inicializar IMA / VAST
-    if (player.ima) {
-      player.ima({
-        adTagUrl: 'https://vod.adcash.com/vast-test.xml',
-        debug: true,
-      })
-    }
-
-    return () => {
-      player.dispose()
-    }
-  }, [ready, src, poster])
+    return () => {}
+  }, [src, poster])
 
   return (
-    <>
-      {/* SDK Google IMA */}
-      <Script
-        src="https://imasdk.googleapis.com/js/sdkloader/ima3.js"
-        strategy="afterInteractive"
-      />
+    <div className="relative w-full">
+      {/* Container do anúncio */}
+      <div
+        ref={adContainerRef}
+        className="absolute inset-0 z-20 bg-black/80 flex items-center justify-center"
+      ></div>
 
-      {/* videojs-contrib-ads */}
-      <Script
-        src="https://cdnjs.cloudflare.com/ajax/libs/videojs-contrib-ads/6.9.0/videojs-contrib-ads.min.js"
-        strategy="afterInteractive"
-      />
-
-      {/* videojs-ima */}
-      <Script
-        src="https://cdn.jsdelivr.net/npm/videojs-ima@1.11.0/dist/videojs.ima.min.js"
-        strategy="afterInteractive"
-        onLoad={() => setReady(true)}
-      />
-
-      {/* CSS do IMA */}
-      <link
-        rel="stylesheet"
-        href="https://cdn.jsdelivr.net/npm/videojs-ima@1.11.0/dist/videojs.ima.css"
-      />
-
-      <div data-vjs-player>
-        <video
-          ref={videoRef}
-          className="video-js vjs-default-skin vjs-big-play-centered"
-        >
-          <source src={src} type="video/mp4" />
-        </video>
-      </div>
-    </>
+      {/* Vídeo principal */}
+      <video
+        ref={videoRef}
+        poster={poster}
+        controls
+        className="w-full rounded-2xl shadow-lg"
+      >
+        <source src={src} type="video/mp4" />
+      </video>
+    </div>
   )
 }
