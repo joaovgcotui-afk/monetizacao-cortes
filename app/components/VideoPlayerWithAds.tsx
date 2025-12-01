@@ -1,12 +1,9 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
+import Script from 'next/script'
 import videojs from 'video.js'
 import 'video.js/dist/video-js.css'
-
-// plugins
-import 'videojs-contrib-ads'
-import 'videojs-ima'
 
 interface VideoPlayerWithAdsProps {
   src: string
@@ -15,51 +12,68 @@ interface VideoPlayerWithAdsProps {
 
 export function VideoPlayerWithAds({ src, poster }: VideoPlayerWithAdsProps) {
   const videoRef = useRef<HTMLVideoElement | null>(null)
-  const playerRef = useRef<any>(null)
+  const [adsLoaded, setAdsLoaded] = useState(false)
+  const [imaLoaded, setImaLoaded] = useState(false)
 
   useEffect(() => {
     if (!videoRef.current) return
+    if (!adsLoaded || !imaLoaded) return // ESPERA AMBOS OS PLUGINS CARREGAREM
 
-    if (!playerRef.current) {
-      playerRef.current = videojs(videoRef.current, {
-        controls: true,
-        preload: 'auto',
-        autoplay: false,
-        fluid: true,
-        poster,
-      })
+    const player = videojs(videoRef.current, {
+      controls: true,
+      preload: 'auto',
+      fluid: true,
+      autoplay: false,
+      poster,
+    })
 
-      // inicializar ads plugin
-      playerRef.current.ads()
-
-      // configurar VAST via IMA
-      playerRef.current.ima({
-        id: 'video-player',
-        adTagUrl: 'https://vod.adcash.com/vast-test.xml', // TAG DE TESTE
-        debug: true,
-        adsManagerLoadedCallback: () => {
-          console.log('IMA Ads Manager Loaded')
-        },
-      })
-    }
+    // Inicializa plugins
+    player.ads() // agora existe
+    player.ima({
+      adTagUrl: 'https://vod.adcash.com/vast-test.xml',
+      debug: true,
+    })
 
     return () => {
-      if (playerRef.current) {
-        playerRef.current.dispose()
-        playerRef.current = null
-      }
+      player.dispose()
     }
-  }, [src, poster])
+  }, [adsLoaded, imaLoaded, src, poster])
 
   return (
-    <div data-vjs-player>
-      <video
-        ref={videoRef}
-        className="video-js vjs-default-skin vjs-big-play-centered"
-        playsInline
-      >
-        <source src={src} type="video/mp4" />
-      </video>
-    </div>
+    <>
+      {/* PLUGIN DE ADS */}
+      <Script
+        src="https://cdnjs.cloudflare.com/ajax/libs/videojs-contrib-ads/6.9.0/videojs-contrib-ads.min.js"
+        strategy="afterInteractive"
+        onLoad={() => setAdsLoaded(true)}
+      />
+
+      {/* PLUGIN DE IMA + SDK DO GOOGLE */}
+      <Script
+        src="https://cdn.jsdelivr.net/npm/videojs-ima@1.11.0/dist/videojs.ima.min.js"
+        strategy="afterInteractive"
+        onLoad={() => setImaLoaded(true)}
+      />
+
+      <Script
+        src="https://imasdk.googleapis.com/js/sdkloader/ima3.js"
+        strategy="afterInteractive"
+      />
+
+      {/* CSS DO IMA */}
+      <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/videojs-ima@1.11.0/dist/videojs.ima.css"
+      />
+
+      <div data-vjs-player>
+        <video
+          ref={videoRef}
+          className="video-js vjs-default-skin vjs-big-play-centered"
+        >
+          <source src={src} type="video/mp4" />
+        </video>
+      </div>
+    </>
   )
 }
