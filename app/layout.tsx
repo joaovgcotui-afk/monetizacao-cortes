@@ -1,28 +1,61 @@
-import type { Metadata } from "next";
-import "./globals.css";
-import { AdsClient } from "./components/AdsClient";
+'use client'
 
-export const metadata: Metadata = {
-  title: "Monetização Cortes Studio",
-  description: "Cortes prontos para ganhar dinheiro",
-};
+import { useEffect, useRef } from 'react'
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+interface VideoPlayerWithAdsProps {
+  src: string
+  poster?: string
+}
+
+export function VideoPlayerWithAds({ src, poster }: VideoPlayerWithAdsProps) {
+  const videoRef = useRef<HTMLVideoElement | null>(null)
+
+  useEffect(() => {
+    if (!videoRef.current) return
+    if (typeof window === 'undefined') return
+
+    const fluidPlayer = (window as any).fluidPlayer
+    if (!fluidPlayer) return
+
+    const player = fluidPlayer(videoRef.current, {
+      layoutControls: {
+        fillToContainer: true,
+        posterImage: poster || '',
+        autoPlay: false,
+        mute: false,
+        allowTheatre: true,
+        allowTheatreFullscreen: true,
+        allowFullscreen: true,
+        primaryColor: '#00c3ff',
+      },
+      vastOptions: {
+        adList: [
+          {
+            roll: 'preRoll',
+            vastTag: 'https://vod.adcash.com/vast-test.xml',
+            adText: 'Seu vídeo começará após o anúncio...',
+            adTextPosition: 'bottom right',
+          },
+        ],
+        showPlayButton: true,
+      },
+    })
+
+    return () => {
+      try {
+        player?.destroy()
+      } catch {}
+    }
+  }, [src, poster])
+
   return (
-    <html lang="pt-BR">
-      <head>
-        {/* Monetag Site Verification */}
-        <meta name="monetag" content="743381a3c558995ad993355162fc7956" />
-      </head>
-
-      <body className="bg-gray-50">
-        <AdsClient />
-        {children}
-      </body>
-    </html>
-  );
+    <video
+      ref={videoRef}
+      playsInline
+      controls={false}
+      className="w-full rounded-lg overflow-hidden"
+    >
+      <source src={src} type="video/mp4" />
+    </video>
+  )
 }
