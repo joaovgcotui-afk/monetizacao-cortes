@@ -12,15 +12,13 @@ interface VideoPlayerWithAdsProps {
 
 export function VideoPlayerWithAds({ src, poster }: VideoPlayerWithAdsProps) {
   const videoRef = useRef<HTMLVideoElement | null>(null)
-  const [adsLoaded, setAdsLoaded] = useState(false)
-  const [imaLoaded, setImaLoaded] = useState(false)
+  const [ready, setReady] = useState(false)
 
   useEffect(() => {
-    if (!videoRef.current) return
-    if (!adsLoaded || !imaLoaded) return
+    if (!videoRef.current || !ready) return
 
-    // @ts-expect-error  – ignorar plugin sem tipos
-    const player: any = videojs(videoRef.current, {
+    // Os plugins DO CDN serão adicionados ao window.videojs automaticamente
+    const player = (window as any).videojs(videoRef.current, {
       controls: true,
       preload: 'auto',
       fluid: true,
@@ -28,40 +26,43 @@ export function VideoPlayerWithAds({ src, poster }: VideoPlayerWithAdsProps) {
       poster,
     })
 
-    // @ts-expect-error – ignorar plugin sem tipos
-    player.ads()
+    // Inicializar Sistema de Anúncios
+    if (player.ads) {
+      player.ads()
+    }
 
-    // @ts-expect-error – ignorar plugin sem tipos
-    player.ima({
-      adTagUrl: 'https://vod.adcash.com/vast-test.xml',
-      debug: true,
-    })
+    // Inicializar IMA / VAST
+    if (player.ima) {
+      player.ima({
+        adTagUrl: 'https://vod.adcash.com/vast-test.xml',
+        debug: true,
+      })
+    }
 
     return () => {
       player.dispose()
     }
-  }, [adsLoaded, imaLoaded, src, poster])
+  }, [ready, src, poster])
 
   return (
     <>
-      {/* Plugin ADS */}
-      <Script
-        src="https://cdnjs.cloudflare.com/ajax/libs/videojs-contrib-ads/6.9.0/videojs-contrib-ads.min.js"
-        strategy="afterInteractive"
-        onLoad={() => setAdsLoaded(true)}
-      />
-
-      {/* Plugin IMA */}
-      <Script
-        src="https://cdn.jsdelivr.net/npm/videojs-ima@1.11.0/dist/videojs.ima.min.js"
-        strategy="afterInteractive"
-        onLoad={() => setImaLoaded(true)}
-      />
-
-      {/* SDK Google */}
+      {/* SDK Google IMA */}
       <Script
         src="https://imasdk.googleapis.com/js/sdkloader/ima3.js"
         strategy="afterInteractive"
+      />
+
+      {/* videojs-contrib-ads */}
+      <Script
+        src="https://cdnjs.cloudflare.com/ajax/libs/videojs-contrib-ads/6.9.0/videojs-contrib-ads.min.js"
+        strategy="afterInteractive"
+      />
+
+      {/* videojs-ima */}
+      <Script
+        src="https://cdn.jsdelivr.net/npm/videojs-ima@1.11.0/dist/videojs.ima.min.js"
+        strategy="afterInteractive"
+        onLoad={() => setReady(true)}
       />
 
       {/* CSS do IMA */}
